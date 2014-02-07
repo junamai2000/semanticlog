@@ -55,7 +55,7 @@ static int logtest_handler(request_rec *r)
 
 	SemanticLogger log(r);
 	SemanticLogRoute* route = new SemanticLogFileRoute();
-	route->setLogFile("./output");
+	route->setLogFile("/tmp/output");
 	route->setRotate(true);
 	log.addRoute(route);
 	log.applicationLog(1, "error\n", SemanticLogger::INFO, "aaa.aa.aaaaa", "test", "{\"ssss\":12344 }");

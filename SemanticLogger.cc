@@ -120,12 +120,18 @@ bool SemanticLogger::flush()
  * @param level ログレベル
  * @param category カテゴリ文字列
  */
-bool SemanticLogger::_innerApplicationLog(picojson::object &log, int eventId, const char* message, SemanticLoggerLevel level, const char* category)
+bool SemanticLogger::_innerApplicationLog(picojson::object &log, int eventId, const char* message,
+	   	SemanticLoggerLevel level, const char* category, const char* file, const int line)
 {
 	log["eventId"] = picojson::value((double)eventId);
 	log["message"] = picojson::value(message);
 	log["category"] = picojson::value(category);
 	log["level"] = picojson::value(this->_getLogLevelAsString(level));
+	if (line!=0)
+		log["line"] = picojson::value((double)line);
+	if (file)
+		log["file"] = picojson::value(file);
+	return true;
 }
 
 /**
@@ -135,10 +141,11 @@ bool SemanticLogger::_innerApplicationLog(picojson::object &log, int eventId, co
  * @param level ログレベル
  * @param category カテゴリ文字列
  */
-bool SemanticLogger::applicationLog(int eventId, const char* message, SemanticLoggerLevel level, const char* category)
+bool SemanticLogger::applicationLog(int eventId, const char* message,
+		SemanticLoggerLevel level, const char* category, const char* file, const int line)
 {
 	picojson::object app;
-	this->_innerApplicationLog(app, eventId, message, level, category);
+	this->_innerApplicationLog(app, eventId, message, level, category, file, line);
 	this->_applicationLog.push_back(picojson::value(app));
 	return true;
 }
@@ -151,10 +158,11 @@ bool SemanticLogger::applicationLog(int eventId, const char* message, SemanticLo
  * @param category カテゴリ文字列
  * @param items アプリケーションログに追加する情報
  */
-bool SemanticLogger::applicationLog(int eventId, const char* message, SemanticLoggerLevel level, const char* category, std::map<std::string, std::string> items)
+bool SemanticLogger::applicationLog(int eventId, const char* message,
+		SemanticLoggerLevel level, const char* category, std::map<std::string, std::string> items, const char* file, const int line)
 {
 	picojson::object app;
-	this->_innerApplicationLog(app, eventId, message, level, category);
+	this->_innerApplicationLog(app, eventId, message, level, category, file, line);
 	std::map<std::string, std::string>::iterator p;
 	for(p=items.begin(); p!=items.end(); p++)
 		app[p->first] = picojson::value(p->second);
@@ -171,10 +179,11 @@ bool SemanticLogger::applicationLog(int eventId, const char* message, SemanticLo
  * @param key Jsonを追加するキーエントリ名
  * @param json Json文字列（シンタックスは正しくないとだめ）
  */
-bool SemanticLogger::applicationLog(int eventId, const char* message, SemanticLoggerLevel level, const char* category, const char* key, const char* json)
+bool SemanticLogger::applicationLog(int eventId, const char* message,
+		SemanticLoggerLevel level, const char* category, const char* key, const char* json, const char* file, const int line)
 {
 	picojson::object app;
-	this->_innerApplicationLog(app, eventId, message, level, category);
+	this->_innerApplicationLog(app, eventId, message, level, category, file, line);
 
 	std::string err;
 	picojson::value v;

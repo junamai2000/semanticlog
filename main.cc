@@ -19,5 +19,6 @@ int main()
 	itms.insert(std::pair<std::string, std::string>("05", "XML"));
 	log.applicationLog(2, "trace\n", SemanticLogger::TRACE, "aaa.aa.aaaaa", itms);
 	log.applicationLog(3, "info\n", SemanticLogger::INFO, "aaa.aa.aaaaa");
+	log.info(4, "aaaa", "aaa.aaaa.aaa", __FILE__, __LINE__);
 	return 1;
 }

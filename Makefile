@@ -13,5 +13,5 @@ a.out: $(OBJS)
 
 clean:
 	rm *.o
-	rm a.out
+	rm -f a.out
 
